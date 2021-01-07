@@ -16,7 +16,12 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Permutation<T> = any;
+type Permutation<T, K = T> = 
+[T] extends [never] // "T extends never" doesn't work well, see https://github.com/microsoft/TypeScript/issues/23182
+  ? []
+  : K extends K // Breaking down union, good explanation of this one at https://github.com/type-challenges/type-challenges/issues/614
+  ? [K, ...Permutation<Exclude<T, K>>]
+  : never;
 
 /* _____________ Test Cases _____________ */
 import { Equal, Expect } from "@type-challenges/utils";
